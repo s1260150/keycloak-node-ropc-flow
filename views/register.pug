@@ -1,0 +1,75 @@
+html
+	head
+		title keycloak-authentication-test
+		style(type="text/css").
+			.content 
+			{
+				margin: 20px auto 0 auto;
+				padding: 20px;
+				width: 95%;
+				box-shadow: 0 0 8px rgba(0, 0, 0, .16);
+			}
+
+			.padding 
+			{
+				padding: 15px;
+				word-break: break-word;
+			}
+	body
+		.content
+			h1 Register
+
+			.padding
+				input#username-field(type='text', placeholder='username')
+			.padding
+				input#password-field(type='text', placeholder='password')
+			.padding 
+				input#firstname-field(type='text', placeholder='first name')
+			.padding 
+				input#lastname-field(type='text', placeholder='last name')
+
+			.padding
+				button#register-btn 登録
+			
+			.padding 
+				p#status 
+				p#status-text 
+				p#error 
+				p#error-description
+
+		script(src="https://unpkg.com/axios/dist/axios.min.js")
+		script.
+			const username_field = document.querySelector('#username-field');
+			const password_field = document.querySelector('#password-field');
+			const firstname_field = document.querySelector('#firstname-field');
+			const lastname_field = document.querySelector('#lastname-field');
+			const register_btn = document.querySelector('#register-btn');
+			
+			const status_element = document.querySelector('#status');
+			const status_text_element = document.querySelector('#status-text ');
+			const error_element = document.querySelector('#error');
+			const error_description_element = document.querySelector('#error-description');
+
+			register_btn.addEventListener('click', async () =>
+			{
+				const username = username_field.value;
+				const password = password_field.value;
+				const firstname = firstname_field.value;
+				const lastname = lastname_field.value;
+
+				try 
+				{
+					const res = await axios.post('/register', { username, password, firstname, lastname });
+
+					location.href = '/login'
+				}
+				catch(err)
+				{
+					const res = err.response.data
+
+					status_element.textContent = `status: ${res.status}`;
+					status_text_element.textContent = `text: ${res.status_text}`;
+					error_element.textContent = `error: ${res.error}`
+					error_description_element.textContent = `description: ${res.error_description}`;
+				}
+			});
